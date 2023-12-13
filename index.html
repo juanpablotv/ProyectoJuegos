@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos</title>
+    <style>
+        body {
+            background: url('imagenes/li.jpg') repeat;
+            background-size:auto;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #eee6e6;
+            font-size: 40px; 
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: row; 
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; 
+            margin-top: 20px;
+        }
+
+        .game {
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+            transition: background-color 0.2s; 
+        }
+
+        .game:hover {
+            background-color: transparent; 
+        }
+
+        .game img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .game button {
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 18px; 
+            background-color: transparent; 
+            color: #eee7e7;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .game button:hover {
+            background-color: #4750d1; 
+        }
+
+        @keyframes moveBackground {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 0;
+            }
+        }
+
+        body {
+            animation: moveBackground 10s linear infinite; 
+        }
+
+        @media only screen and (max-width: 600px) {
+            .game {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Juegos</h1>
+
+    <div class="game-container">
+        <div class="game">
+            <button onclick="window.location.href='ahorcado.html'">Jugar Ahorcado</button>
+        </div>
+
+        <div class="game">
+            <button onclick="window.location.href='TicTac.html'">Jugar Gato</button>
+        </div>
+    </div>
+
+</body>
+</html>

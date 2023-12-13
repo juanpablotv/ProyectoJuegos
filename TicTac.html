@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      height: 100vh;
+      background: black; /* Fondo negro */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 5px;
+      margin: 20px auto;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #ccc;
+      font-size: 2em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff; /* Color de texto blanco */
+      background: rgba(255, 255, 255, 0.1); /* Fondo con opacidad para efecto de destellos */
+    }
+
+    .cell.X {
+      color: red; /* Color rojo para X */
+    }
+
+    .cell.O {
+      color: blue; /* Color azul para O */
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: #fff; /* Color de texto blanco */
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: #fff; /* Color de texto blanco */
+    }
+
+    #playAgain {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: #fff; /* Color de texto blanco */
+      background: none;
+      border: 2px solid #fff; /* Borde blanco */
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    #playAgain:hover {
+      background: #fff; /* Fondo blanco al pasar el ratón */
+      color: #000; /* Texto negro al pasar el ratón */
+    }
+  </style>
+  <title>Juego de Gato</title>
+</head>
+<body>
+
+<div id="board"></div>
+<div id="status">Turno de X</div>
+<div id="result"></div>
+<button id="playAgain" onclick="resetGame()">Jugar de Nuevo</button>
+
+<script>
+  let currentPlayer = 'X';
+  let board = ['', '', '', '', '', '', '', '', ''];
+  let gameActive = true;
+
+  const cells = [];
+
+  function checkWinner() {
+    const winPatterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Filas
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columnas
+      [0, 4, 8], [2, 4, 6]             // Diagonales
+    ];
+
+    for (let pattern of winPatterns) {
+      const [a, b, c] = pattern;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        gameActive = false;
+        return board[a];
+      }
+    }
+
+    if (!board.includes('')) {
+      gameActive = false;
+      return 'Empate';
+    }
+
+    return null;
+  }
+
+  function handleClick(index) {
+    if (!gameActive || board[index] !== '') return;
+
+    board[index] = currentPlayer;
+    cells[index].innerText = currentPlayer;
+    cells[index].classList.add(currentPlayer); // Agregamos la clase para cambiar el color
+    
+    const winner = checkWinner();
+    const statusDisplay = document.getElementById('status');
+    const resultDisplay = document.getElementById('result');
+    if (winner) {
+      statusDisplay.innerText = '';
+      resultDisplay.innerText = winner === 'Empate' ? '¡Es un empate!' : `¡${winner} ha ganado!`;
+    } else {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      statusDisplay.innerText = `Turno de ${currentPlayer}`;
+      resultDisplay.innerText = '';
+    }
+  }
+
+  function resetGame() {
+    board = ['', '', '', '', '', '', '', '', ''];
+    gameActive = true;
+    currentPlayer = 'X';
+    const statusDisplay = document.getElementById('status');
+    const resultDisplay = document.getElementById('result');
+    statusDisplay.innerText = 'Turno de X';
+    resultDisplay.innerText = '';
+
+    cells.forEach((cell, index) => {
+      cell.innerText = '';
+      cell.classList.remove('X', 'O'); // Eliminamos las clases de X y O
+      cell.addEventListener('click', () => handleClick(index));
+    });
+  }
+
+  // Crear el tablero
+  const boardContainer = document.getElementById('board');
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    cell.addEventListener('click', () => handleClick(i));
+    boardContainer.appendChild(cell);
+    cells.push(cell);  // Agregamos la celda al array de celdas
+  }
+</script>
+
+</body>
+</html>

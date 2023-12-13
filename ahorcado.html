@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego del Ahorcado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 1s ease;
+    }
+    #word-container {
+      margin: 20px;
+      font-size: 24px;
+    }
+    #letters-container {
+      margin: 20px;
+    }
+    #attempts-container {
+      margin: 20px;
+      font-size: 18px;
+    }
+    #message-container {
+      margin: 20px;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+    button {
+      background-color: rgba(255, 204, 153, 0.8);
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: rgba(255, 153, 51, 0.8);
+    }
+  </style>
+</head>
+<body>
+
+<div id="word-container"></div>
+<div id="letters-container"></div>
+<div id="attempts-container">Oportunidades restantes: <span id="attempts"></span></div>
+<div id="message-container"></div>
+<button onclick="iniciarJuego()">Volver a Jugar</button>
+
+<script>
+  const palabras = ["javascript", "html", "css", "programacion", "desarrollo", "gato"];
+
+  let palabraSecreta;
+  let letrasAdivinadas;
+  let intentosRestantes;
+
+  function iniciarJuego() {
+    palabraSecreta = palabras[Math.floor(Math.random() * palabras.length)];
+  
+    letrasAdivinadas = new Array(palabraSecreta.length).fill(false);
+    intentosRestantes = 6;
+
+    mostrarPalabra();
+    mostrarLetras();
+    mostrarIntentos();
+    actualizarMensaje("");
+  }
+
+  function mostrarPalabra() {
+    const wordContainer = document.getElementById('word-container');
+    wordContainer.innerHTML = letrasAdivinadas
+      .map((adivinada, index) => adivinada ? palabraSecreta[index] : '_')
+      .join(' ');
+  }
+
+  function mostrarLetras() {
+    const lettersContainer = document.getElementById('letters-container');
+    const letrasDisponibles = 'abcdefghijklmnopqrstuvwxyz';
+    
+    lettersContainer.innerHTML = letrasDisponibles
+      .split('')
+      .map(letra => `<button onclick="adivinarLetra('${letra}')">${letra}</button>`)
+      .join(' ');
+  }
+
+  function mostrarIntentos() {
+    const attemptsContainer = document.getElementById('attempts');
+    attemptsContainer.textContent = intentosRestantes;
+  }
+
+  function actualizarMensaje(mensaje) {
+    const messageContainer = document.getElementById('message-container');
+    messageContainer.textContent = mensaje;
+  }
+
+  function cambiarColorFondo() {
+    const coloresFondo = ['#ffdddd', '#ffccdd', '#ffbbdd', '#ff99dd', '#ff88dd']; 
+    const colorAleatorio = coloresFondo[Math.floor(Math.random() * coloresFondo.length)];
+    document.body.style.background = `radial-gradient(circle at center, ${colorAleatorio}, ${colorAleatorio})`;
+  }
+
+  function adivinarLetra(letra) {
+    if (intentosRestantes > 0 && palabraSecreta.includes(letra)) {
+      for (let i = 0; i < palabraSecreta.length; i++) {
+        if (palabraSecreta[i] === letra) {
+          letrasAdivinadas[i] = true;
+        }
+      }
+    } else {
+    
+      intentosRestantes--;
+    }
+
+   
+    mostrarPalabra();
+    mostrarLetras();
+    mostrarIntentos();
+
+
+    if (letrasAdivinadas.every(adivinada => adivinada)) {
+      actualizarMensaje('¡Felicidades! ¡Has ganado!');
+    } else if (intentosRestantes === 0) {
+      actualizarMensaje(`¡Oh no! Has perdido. La palabra era "${palabraSecreta}".`);
+    }
+
+    
+    setTimeout(cambiarColorFondo, 5000);
+  }
+
+  iniciarJuego();
+</script>
+
+</body>
+</html>
